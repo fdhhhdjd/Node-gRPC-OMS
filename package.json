@@ -1,0 +1,18 @@
+{
+  "name": "node-oms-practice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.10.10",
+    "amqplib": "^0.10.4",
+    "express": "^4.19.2",
+    "mongoose": "^8.4.5"
+  }
+}

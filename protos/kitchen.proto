@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package kitchen;
+
+service KitchenService {
+  rpc PrepareOrder (KitchenOrderRequest) returns (KitchenOrderResponse);
+}
+
+message KitchenOrderRequest {
+  string orderId = 1;
+  string item = 2;
+  int32 quantity = 3;
+}
+
+message KitchenOrderResponse {
+  string status = 1;
+}
