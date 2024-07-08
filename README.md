@@ -11,23 +11,21 @@
 
 ##  Get Order Status
 ```cmd
-    curl -X GET http://localhost:3000/orderStatus?orderId=12345
+    curl -X GET "http://localhost:3000/orderStatus?orderId=<order_id>"
+
 ```
 
 ##  Check stock
 ```cmd
-   curl -X GET http://localhost:3000/checkStock?item=Pizza
+  curl -X GET "http://localhost:3000/checkStock?item=Pizza"
+
 ```
 
 ##  Prepare Order
 ```cmd
-    curl -X POST http://localhost:3000/prepareOrder \
-    -H "Content-Type: application/json" \
-    -d '{"orderId": "12345", "item": "Pizza", "quantity": 2}'
+    curl -X POST http://localhost:3000/prepareOrder -H "Content-Type: application/json" -d '{"orderId": "<order_id>", "item": "Pizza", "quantity": 2}'
 ```
 ## Process Payment
 ```cmd
-    curl -X POST http://localhost:3000/processPayment \
-    -H "Content-Type: application/json" \
-    -d '{"orderId": "12345", "amount": 19.99}'
+    curl -X POST http://localhost:3000/processPayment -H "Content-Type: application/json" -d '{"orderId": "<order_id>", "amount": 19.99}'
 ```
