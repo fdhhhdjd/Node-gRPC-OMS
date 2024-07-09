@@ -18,7 +18,6 @@ const orderProto = grpc.loadPackageDefinition(packageDefinition).order;
 
 const OrderSchema = new mongoose.Schema({
   item: String,
-  productId: String,
   quantity: Number,
   status: String,
 });
@@ -26,8 +25,8 @@ const OrderSchema = new mongoose.Schema({
 const Order = mongoose.model("Order", OrderSchema);
 
 async function createOrder(call, callback) {
-  const { item, quantity, productId } = call.request;
-  const newOrder = new Order({ item, productId, quantity, status: "Created" });
+  const { item, quantity } = call.request;
+  const newOrder = new Order({ item, quantity, status: "Created" });
   await newOrder.save();
 
   // Publish to RabbitMQ
@@ -39,7 +38,6 @@ async function createOrder(call, callback) {
     Buffer.from(
       JSON.stringify({
         orderId: newOrder._id.toString(),
-        productId,
         item,
         quantity,
       })

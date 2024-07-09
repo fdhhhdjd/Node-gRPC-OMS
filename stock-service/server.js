@@ -56,8 +56,6 @@ server.bindAsync(
             msg.content.toString()
           );
 
-          console.log(orderId, item, quantity);
-
           const stock = await Stock.findOne({ item });
           if (stock && stock.quantity >= quantity) {
             stock.quantity -= quantity;
