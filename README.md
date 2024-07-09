@@ -1,6 +1,11 @@
-## Orders Manager Systems
-![Image](docs/oms.png)
+## Orders Manager Systems ( Dark and Light)
 
+# Light
+![Image](docs/oms_light.png)
+
+
+# Dark
+![Image](docs/oms_dark.png)
 
 ## Create Orders
 ```cmd
