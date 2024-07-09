@@ -26,6 +26,21 @@ const OrderSchema = new mongoose.Schema({
 
 const Order = mongoose.model("Order", OrderSchema);
 
+const PaymentSchema = new mongoose.Schema({
+  orderId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Order",
+    required: true,
+  },
+  amount: { type: Number, required: true },
+  currency: { type: String, required: true },
+  paymentIntentId: { type: String, required: true },
+  status: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
+const Payment = mongoose.model("Payment", PaymentSchema);
+
 async function processPayment(call, callback) {
   const { orderId, amount } = call.request;
   const order = await Order.findById(orderId);
@@ -82,6 +97,16 @@ server.bindAsync(
             });
             order.status = "Paid";
             await order.save();
+
+            // Save payment details
+            const payment = new Payment({
+              orderId: order._id,
+              amount: amount,
+              currency: "usd",
+              paymentIntentId: paymentIntent.id,
+              status: "created",
+            });
+            await payment.save();
             console.log("Payment Intent ID:", paymentIntent.id);
             console.log(`Payment processed for order: ${orderId}`);
           } catch (error) {

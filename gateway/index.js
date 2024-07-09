@@ -2,9 +2,29 @@ const express = require("express");
 const grpc = require("@grpc/grpc-js");
 const protoLoader = require("@grpc/proto-loader");
 const path = require("path");
-const { App, StripeKey } = require("../env/link");
+const { default: mongoose } = require("mongoose");
 const Stripe = require("stripe");
+const connectDB = require("../config/mongo");
+
+connectDB();
+
+const { App, StripeKey } = require("../env/link");
 const stripe = Stripe(StripeKey.secretKey);
+
+const PaymentSchema = new mongoose.Schema({
+  orderId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Order",
+    required: true,
+  },
+  amount: { type: Number, required: true },
+  currency: { type: String, required: true },
+  paymentIntentId: { type: String, required: true },
+  status: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
+const Payment = mongoose.model("Payment", PaymentSchema);
 
 // Load proto files
 const orderProtoPath = path.join(__dirname, "../protos/order.proto");
@@ -177,8 +197,17 @@ app.post("/confirm-payment", async (req, res) => {
 });
 
 // Webhook
-app.post("/webhook", (req, res) => {
+app.post("/webhook", async (req, res) => {
   const event = req.body;
+
+  const payment = await Payment.findOne({
+    paymentIntentId: event.data.object.id,
+  });
+
+  payment.status = "Paid";
+
+  await payment.save();
+
   // Handle the event
   switch (event.type) {
     case "payment_intent.succeeded":
